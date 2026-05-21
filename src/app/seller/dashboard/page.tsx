@@ -1,12 +1,28 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import styles from "./page.module.css";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useApp } from "@/context/AppContext";
 
 export default function SellerDashboard() {
+  const router = useRouter();
   const { user, items, transactions, addListing, updateListing, deleteListing, updateTransactionStatus } = useApp();
+
+  useEffect(() => {
+    if (!user || user.role !== "seller") {
+      router.push("/auth?redirect=/seller/dashboard");
+    }
+  }, [user, router]);
+
+  if (!user || user.role !== "seller") {
+    return (
+      <div style={{ textAlign: "center", padding: "80px 20px" }}>
+        <h2>Loading secure dashboard...</h2>
+      </div>
+    );
+  }
   const [activeTab, setActiveTab] = useState("listings"); // 'listings' | 'orders' | 'delivery'
 
   // Modal State

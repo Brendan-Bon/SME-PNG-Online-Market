@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import styles from "./page.module.css";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useApp } from "@/context/AppContext";
 
-export default function AuthPage() {
+function AuthContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams?.get("redirect") || null;
+
   const { login, register } = useApp();
 
   const [userType, setUserType] = useState<"buyer" | "seller" | "admin">("buyer");
@@ -29,8 +32,9 @@ export default function AuthPage() {
     if (mode === "login") {
       const success = login(email, userType);
       if (success) {
-        // Redirect based on role
-        if (userType === "seller") {
+        if (redirectParam) {
+          router.push(redirectParam);
+        } else if (userType === "seller") {
           router.push("/seller/dashboard");
         } else if (userType === "admin") {
           router.push("/admin");
@@ -44,10 +48,18 @@ export default function AuthPage() {
       // Register
       if (userType === "seller") {
         register(name || storeName, email, "seller", storeName, province);
-        router.push("/seller/dashboard");
+        if (redirectParam) {
+          router.push(redirectParam);
+        } else {
+          router.push("/seller/dashboard");
+        }
       } else {
         register(name, email, "buyer");
-        router.push("/");
+        if (redirectParam) {
+          router.push(redirectParam);
+        } else {
+          router.push("/");
+        }
       }
     }
   };
@@ -55,7 +67,9 @@ export default function AuthPage() {
   // Seed user quick login helper
   const handleQuickLogin = (seedEmail: string, role: "buyer" | "seller" | "admin") => {
     login(seedEmail, role);
-    if (role === "seller") {
+    if (redirectParam) {
+      router.push(redirectParam);
+    } else if (role === "seller") {
       router.push("/seller/dashboard");
     } else if (role === "admin") {
       router.push("/admin");
@@ -307,5 +321,13 @@ export default function AuthPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense fallback={<div style={{ textAlign: "center", padding: "80px", color: "var(--color-text-muted)" }}>Loading portal...</div>}>
+      <AuthContent />
+    </Suspense>
   );
 }

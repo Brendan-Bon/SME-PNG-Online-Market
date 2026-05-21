@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { useApp } from "@/context/AppContext";
 
 export default function ItemPage() {
-  const { items, addToCart } = useApp();
+  const { items, addToCart, user } = useApp();
   const params = useParams();
   const itemId = params?.id ? parseInt(params.id as string) : 1;
   
@@ -99,22 +99,34 @@ export default function ItemPage() {
         </div>
 
         <div className={styles.actionGroup}>
-          <button 
-            className={styles.addToCartBtn} 
-            onClick={handleAddToCart}
-            style={{
-              backgroundColor: addedFeedback ? "var(--color-success)" : "var(--color-primary)",
-              transition: "background-color 0.2s"
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-            {addedFeedback ? "Added to Cart! ✓" : "Add to Cart"}
-          </button>
+          {user ? (
+            <button 
+              className={styles.addToCartBtn} 
+              onClick={handleAddToCart}
+              style={{
+                backgroundColor: addedFeedback ? "var(--color-success)" : "var(--color-primary)",
+                transition: "background-color 0.2s"
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+              {addedFeedback ? "Added to Cart! ✓" : "Add to Cart"}
+            </button>
+          ) : (
+            <Link href={`/auth?redirect=${encodeURIComponent(`/items/${item.id}`)}`} style={{ flex: 1 }}>
+              <button className={styles.addToCartBtn} style={{ width: "100%" }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                Login to Add to Cart
+              </button>
+            </Link>
+          )}
           
-          <Link href={`/messages?seller=${encodeURIComponent(item.seller)}&itemId=${item.id}`} style={{ flex: 1 }}>
+          <Link 
+            href={user ? `/messages?seller=${encodeURIComponent(item.seller)}&itemId=${item.id}` : `/auth?redirect=${encodeURIComponent(`/items/${item.id}`)}`} 
+            style={{ flex: 1 }}
+          >
             <button className={styles.messageBtn} style={{ width: "100%" }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-              Message Seller
+              {user ? "Message Seller" : "Login to Message"}
             </button>
           </Link>
         </div>

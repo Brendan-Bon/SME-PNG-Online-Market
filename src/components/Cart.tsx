@@ -11,7 +11,7 @@ interface CartProps {
 }
 
 export default function Cart({ isOpen, onClose }: CartProps) {
-  const { cart, updateCartQuantity, removeFromCart } = useApp();
+  const { cart, updateCartQuantity, removeFromCart, user } = useApp();
 
   // Prevent body scroll when cart is open
   useEffect(() => {
@@ -127,9 +127,9 @@ export default function Cart({ isOpen, onClose }: CartProps) {
               <span className={styles.totalPrice}>K{total.toFixed(2)}</span>
             </div>
             
-            <Link href="/checkout" style={{ textDecoration: "none" }} onClick={onClose}>
+            <Link href={user ? "/checkout" : "/auth?redirect=/checkout"} style={{ textDecoration: "none" }} onClick={onClose}>
               <button className={styles.checkoutBtn}>
-                Proceed to Checkout
+                {user ? "Proceed to Checkout" : "Login to Checkout"}
               </button>
             </Link>
             

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,20 @@ import { useApp } from "@/context/AppContext";
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, createTransaction, user } = useApp();
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/auth?redirect=/checkout");
+    }
+  }, [user, router]);
+
+  if (!user) {
+    return (
+      <div style={{ textAlign: "center", padding: "80px 20px" }}>
+        <h2>Loading secure checkout...</h2>
+      </div>
+    );
+  }
 
   const [paymentMethod, setPaymentMethod] = useState("visa");
 
