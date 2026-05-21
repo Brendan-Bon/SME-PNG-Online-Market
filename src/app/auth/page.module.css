@@ -52,6 +52,43 @@
   font-size: 0.95rem;
 }
 
+.modeToggle {
+  display: flex;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: var(--spacing-lg);
+  gap: var(--spacing-md);
+}
+
+.modeBtn {
+  padding: var(--spacing-sm) 0;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+.modeBtn:hover {
+  color: var(--color-text-primary);
+}
+
+.modeActive {
+  color: var(--color-primary-light);
+}
+
+.modeActive::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-primary);
+}
+
 .tabs {
   display: flex;
   background-color: var(--color-background);
@@ -68,6 +105,7 @@
   color: var(--color-text-secondary);
   border-radius: var(--radius-md);
   transition: all var(--transition-fast);
+  cursor: pointer;
 }
 
 .tab.active {
@@ -121,6 +159,7 @@
   margin-top: var(--spacing-md);
   transition: all var(--transition-normal);
   box-shadow: var(--shadow-md);
+  cursor: pointer;
 }
 
 .submitBtn:hover {

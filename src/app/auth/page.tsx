@@ -88,6 +88,25 @@ export default function AuthPage() {
           </div>
         )}
 
+        <div className={styles.modeToggle}>
+          <button 
+            type="button"
+            className={`${styles.modeBtn} ${mode === "login" ? styles.modeActive : ""}`}
+            onClick={() => { setMode("login"); setErrorMsg(""); }}
+          >
+            Sign In
+          </button>
+          {userType !== "admin" && (
+            <button 
+              type="button"
+              className={`${styles.modeBtn} ${mode === "register" ? styles.modeActive : ""}`}
+              onClick={() => { setMode("register"); setErrorMsg(""); }}
+            >
+              Create Account
+            </button>
+          )}
+        </div>
+
         <div className={styles.tabs}>
           <button 
             type="button"
