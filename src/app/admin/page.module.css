@@ -1,0 +1,302 @@
+.adminContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--spacing-2xl) var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: var(--spacing-md);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adminBadge {
+  background-color: var(--color-primary);
+  color: white;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Stats */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.statCard {
+  background-color: var(--color-surface);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.statTitle {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.statValue {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+/* Split layout */
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-xl);
+}
+
+@media (min-width: 992px) {
+  .dashboardGrid {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: var(--color-surface-hover);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardTitle {
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.listItem {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.listItemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.itemMain {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.itemSub {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.btnGroup {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.actionBtn {
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.verifyBtn {
+  background-color: var(--color-success);
+  color: white;
+}
+.verifyBtn:hover {
+  background-color: #0d9488;
+}
+
+.freezeBtn {
+  background-color: var(--color-error);
+  color: white;
+}
+.freezeBtn:hover {
+  background-color: #dc2626;
+}
+
+.dismissBtn {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.dismissBtn:hover {
+  background-color: var(--color-surface-light);
+  color: var(--color-text-primary);
+}
+
+/* AI Logs */
+.aiLogItem {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.aiIcon {
+  color: var(--color-secondary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.aiLogContent {
+  flex: 1;
+}
+
+.aiLogHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.aiLogLabel {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.aiLogLabel.highRisk {
+  color: var(--color-error);
+}
+
+.aiLogLabel.info {
+  color: #3b82f6;
+}
+
+.aiLogTime {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.aiLogMsg {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+/* AI Assistant Chat UI */
+.aiAssistantArea {
+  padding: var(--spacing-lg);
+  background-color: rgba(252, 209, 22, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.aiChatbox {
+  background-color: var(--color-background);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  min-height: 120px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.aiBubble {
+  background-color: var(--color-surface);
+  border: 1px solid rgba(252, 209, 22, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--color-text-primary);
+  margin-top: 8px;
+}
+
+.aiInputRow {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.aiInput {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-background);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+}
+.aiInput:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+}
+
+.aiSendBtn {
+  padding: 0 var(--spacing-md);
+  background-color: var(--color-secondary);
+  color: #000;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all var(--transition-fast);
+}
+.aiSendBtn:hover {
+  background-color: var(--color-secondary-dark);
+}
+
+.aiRecommendationCard {
+  background-color: rgba(206, 17, 38, 0.05);
+  border: 1px solid rgba(206, 17, 38, 0.15);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-top: var(--spacing-sm);
+}
+
+.aiRecHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-primary-light);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
