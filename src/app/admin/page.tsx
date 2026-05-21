@@ -17,7 +17,7 @@ const mockAiLogs = [
 ];
 
 export default function AdminPage() {
-  const { user, items, transactions, login, toggleSpotlight, toggleSellerVerification, deleteListing } = useApp();
+  const { user, users, items, transactions, login, toggleSpotlight, toggleSellerVerification, deleteListing } = useApp();
 
   const [reports, setReports] = useState(initialScamReports);
   const [aiQuery, setAiQuery] = useState("");
@@ -53,25 +53,21 @@ export default function AdminPage() {
     };
   }, [transactions, items]);
 
-  // Extract all unique sellers and their verification status
+  // Extract all registered sellers and calculate their item counts
   const sellerList = useMemo(() => {
-    const sellerMap: { [name: string]: { name: string; province: string; isVerified: boolean; itemCount: number } } = {};
-    
-    items.forEach(item => {
-      if (!item.seller) return;
-      if (!sellerMap[item.seller]) {
-        sellerMap[item.seller] = {
-          name: item.seller,
-          province: item.province || "Unknown Province",
-          isVerified: item.isVerified || false,
-          itemCount: 0
+    return users
+      .filter((u) => u.role === "seller")
+      .map((u) => {
+        const storeName = u.storeName || u.name;
+        const itemCount = items.filter((item) => item.seller === storeName).length;
+        return {
+          name: storeName,
+          province: u.province || "Unknown Province",
+          isVerified: u.isVerified || false,
+          itemCount,
         };
-      }
-      sellerMap[item.seller].itemCount += 1;
-    });
-
-    return Object.values(sellerMap);
-  }, [items]);
+      });
+  }, [users, items]);
 
   // Partition into verified and pending verification lists
   const pendingSellers = useMemo(() => sellerList.filter(s => !s.isVerified), [sellerList]);

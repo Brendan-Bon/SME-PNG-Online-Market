@@ -48,6 +48,7 @@ export interface Transaction {
 
 interface AppContextType {
   user: User | null;
+  users: User[];
   items: MarketItem[];
   cart: CartItem[];
   messages: Message[];
@@ -113,6 +114,7 @@ const SEED_USERS: User[] = [
 export function AppContextProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
   const [items, setItems] = useState<MarketItem[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -141,6 +143,19 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       } catch (e) {
         setUser(null);
       }
+    }
+
+    // 2b. Load All Users
+    const savedUsers = localStorage.getItem("sme_market_users");
+    if (savedUsers) {
+      try {
+        setUsers(JSON.parse(savedUsers));
+      } catch (e) {
+        setUsers(SEED_USERS);
+      }
+    } else {
+      setUsers(SEED_USERS);
+      localStorage.setItem("sme_market_users", JSON.stringify(SEED_USERS));
     }
 
     // 3. Load Cart
@@ -209,8 +224,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   // Auth Operations
   const login = (email: string, role: "buyer" | "seller" | "admin"): boolean => {
-    // Attempt seed match
-    const found = SEED_USERS.find((u) => u.email.toLowerCase() === email.toLowerCase() && u.role === role);
+    // Attempt match in dynamic users array
+    const found = users.find((u) => u.email.toLowerCase() === email.toLowerCase() && u.role === role);
     if (found) {
       setUser(found);
       saveState("sme_market_user", found);
@@ -227,6 +242,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       province: role === "seller" ? "New Ireland" : undefined,
       isVerified: false,
     };
+    
+    const updatedUsers = [...users, customUser];
+    setUsers(updatedUsers);
+    saveState("sme_market_users", updatedUsers);
+
     setUser(customUser);
     saveState("sme_market_user", customUser);
     return true;
@@ -248,6 +268,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       province: role === "seller" ? province || "New Ireland" : undefined,
       isVerified: false,
     };
+    
+    const updatedUsers = [...users, newUser];
+    setUsers(updatedUsers);
+    saveState("sme_market_users", updatedUsers);
+
     setUser(newUser);
     saveState("sme_market_user", newUser);
   };
@@ -387,9 +412,27 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   const toggleSellerVerification = (sellerName: string) => {
-    const updated = items.map((i) => (i.seller === sellerName ? { ...i, isVerified: !i.isVerified } : i));
-    setItems(updated);
-    saveState("sme_market_items", updated);
+    // 1. Update verification in listings catalog
+    const updatedItems = items.map((i) => (i.seller === sellerName ? { ...i, isVerified: !i.isVerified } : i));
+    setItems(updatedItems);
+    saveState("sme_market_items", updatedItems);
+    
+    // 2. Update verification in users registry
+    const updatedUsers = users.map((u) => {
+      if (u.role === "seller" && u.storeName === sellerName) {
+        const newVerified = !u.isVerified;
+        // If the verified user is currently logged in, update their active session too
+        if (user && user.id === u.id) {
+          const updatedCurrentUser = { ...user, isVerified: newVerified };
+          setUser(updatedCurrentUser);
+          saveState("sme_market_user", updatedCurrentUser);
+        }
+        return { ...u, isVerified: newVerified };
+      }
+      return u;
+    });
+    setUsers(updatedUsers);
+    saveState("sme_market_users", updatedUsers);
   };
 
   // Avoid SSR hydration mismatch
@@ -398,6 +441,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       <AppContext.Provider
         value={{
           user: null,
+          users: SEED_USERS,
           items: marketItems,
           cart: [],
           messages: [],
@@ -428,6 +472,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     <AppContext.Provider
       value={{
         user,
+        users,
         items,
         cart,
         messages,
